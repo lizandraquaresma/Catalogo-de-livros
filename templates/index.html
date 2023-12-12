@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Livros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="container">
+        <h1>Catálogo de Livros</h1>
+        <!-- Formulário de Cadastro de Livros -->
+        <form id="cadastroLivroForm">
+            <label for="titulo">Título:</label>
+            <input type="text" id="titulo" name="titulo" required>
+
+            <label for="autor">Autor:</label>
+            <input type="text" id="autor" name="autor" required>
+
+            <label for="exemplares">Exemplares Disponíveis:</label>
+            <input type="number" id="exemplares" name="exemplares" required>
+
+            <button type="button" id="cadastrarLivroBtn">Cadastrar Livro</button>
+        </form>
+
+        <div id="mensagemErro"></div>
+
+        <form>
+            <label for="pesquisa">Pesquisar Livros:</label>
+            <input type="text" id="pesquisa">
+        </form>
+
+        <!-- Resultados da Pesquisa de Livros -->
+        <div id="resultadosPesquisa"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            pesquisarLivros();
+            
+            // Função para cadastrar livros
+            function cadastrarLivro() {
+                const titulo = $("#titulo").val();
+                const autor = $("#autor").val();
+                const exemplares = $("#exemplares").val();
+
+                // Validar se o título e autor estão preenchidos
+                if (!titulo || !autor) { $("#mensagemErro").text("Erro: O título e autor são obrigatórios.");
+                    return;
+                }
+
+                // Validar se o número de exemplares é um valor válido e maior que zero
+                if (!exemplares || isNaN(exemplares) || parseInt(exemplares) <= 0) { $("#mensagemErro").text("Erro: A quantidade de exemplares disponíveis deve ser um valor válido e maior que zero.");
+            return;
+        }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/cadastrar_livro",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({
+                        titulo: titulo,
+                        autor: autor,
+                        exemplares_disponiveis: exemplares
+                    }),
+                    success: function (response) {
+                        alert(response.message);
+                        pesquisarLivros();
+
+                        // Limpar os campos após cadastrar o livro
+                        $("#titulo").val("");
+                        $("#autor").val("");
+                        $("#exemplares").val("");
+                        $("#pesquisa").val('');
+
+                        // Após cadastrar o livro, pesquise novamente para mostrar a lista atualizada
+                        pesquisarLivros();
+
+                    },
+                    error: function (error) {
+                        $("#mensagemErro").text(error.responseJSON.error);
+                    }
+                });
+            }
+
+            // Função para pesquisar livros
+            function pesquisarLivros() {
+                const termoPesquisa = $("#pesquisa").val();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/pesquisar_livros",
+                    contentType: "application/json;charset=UTF-8",
+                    data: JSON.stringify({
+                        termo: termoPesquisa
+                    }),
+                    success: function (resultados) {
+                        mostrarResultados(resultados);
+                    }
+                });
+            }
+
+            // Função para mostrar resultados
+            function mostrarResultados(resultados) {
+                const resultadosPesquisaDiv = $("#resultadosPesquisa");
+                resultadosPesquisaDiv.empty();
+
+                if (resultados.length === 0) {
+                    resultadosPesquisaDiv.text("Nenhum resultado encontrado.");
+                    return;
+                }
+
+    
+                // Ordenar a lista de livros pelo título antes de exibir
+        resultados.sort((a, b) => a.titulo.localeCompare(b.titulo));
+
+        const listaLivrosParagrafo = $("<p>").html("<strong>Livros Cadastrados:</strong>");
+        resultadosPesquisaDiv.append(listaLivrosParagrafo);
+
+        resultados.forEach(livro => {
+            const livroDiv = $("<div>").addClass("livro-item");
+            const tituloAutor = $("<p>").html(`<strong>${livro.titulo}</strong> - ${livro.autor}`);
+            const disponibilidade = $("<p>").html(`Disponibilidade: ${livro.exemplares_disponiveis} exemplares`);
+
+            livroDiv.append(tituloAutor);
+            livroDiv.append(disponibilidade);
+
+            resultadosPesquisaDiv.append(livroDiv);
+        });
+
+            
+            }
+
+            // Adicionar ouvinte de evento para o botão de cadastro
+            $("#cadastrarLivroBtn").on("click", cadastrarLivro);
+
+            // Adicionar ouvinte de evento para o campo de pesquisa
+            $("#pesquisa").on("input", pesquisarLivros);
+
+        });
+    </script>
+</body>
+</html>
