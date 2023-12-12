@@ -1,29 +1,43 @@
-# Catálogo de Livros em JavaScript
+# Catálogo de Livros
 
-Este é um projeto de catálogo de livros desenvolvido em HTML, CSS e JavaScript. A aplicação permite o cadastro de livros, validação de disponibilidade e pesquisa por título ou autor.
+## Descrição
+Este é um projeto simples de catálogo de livros desenvolvido em Python utilizando o framework Flask. A aplicação permite o cadastro de livros, validação da disponibilidade, pesquisa por título ou autor, e exibição dos resultados.
 
 ## Funcionalidades
 
-1. **Cadastro de Livros:**
-   - Os usuários podem cadastrar livros fornecendo título, autor e número de exemplares disponíveis.
+- **Cadastro de Livros:**
+  - Os usuários podem cadastrar livros, incluindo título, autor e número de exemplares disponíveis.
+  - A aplicação valida se o número de exemplares disponíveis é um valor válido e maior que zero.
 
-2. **Validação de Disponibilidade:**
-   - A aplicação verifica se o número de exemplares disponíveis é um valor válido e maior que zero.
+- **Validação de Disponibilidade:**
+  - Garante que o número de exemplares disponíveis seja um valor válido e maior que zero.
 
-3. **Pesquisa de Livros:**
-   - Os usuários podem pesquisar livros por título ou autor.
-   - A aplicação exibe os resultados da pesquisa e a disponibilidade de cada livro.
+- **Pesquisa de Livros:**
+  - Os usuários podem pesquisar livros por título ou autor.
+  - A aplicação exibe os resultados da pesquisa e a disponibilidade de cada livro.
 
-## Configuração
+## Como Executar
+Certifique-se de ter o Python instalado. Clone o repositório e siga estas etapas:
 
-1. Clone o repositório: `git clone https://github.com/seu-usuario/seu-projeto.git`
-2. Abra o arquivo `index.html` em um navegador web.
+1. Instale as dependências:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Estrutura de Diretórios
+2. Execute o aplicativo:
+   ```bash
+   python app.py
+   ```
 
-- `index.html`: Página principal da aplicação.
-- `style.css`: Folha de estilo para estilizar a aplicação.
-- `script.js`: Script JavaScript para a lógica da aplicação.
+3. Abra o navegador e acesse `http://localhost:5000`.
+
+## Tecnologias Utilizadas
+- Python
+- Flask
+- JavaScript (Ajax, jQuery)
+
+## Autor
+Lizandra Quaresma
 
 ## Contribuição
 
